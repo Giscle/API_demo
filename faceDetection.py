@@ -7,13 +7,13 @@ secret = "YOUR_SECRET_KEY"
 
 g_url = 'http://api.giscle.ml'
 
-imageName = "sid1.jpg"
+imageName = "..."
 img = open(imageName,'rb')
 img = img.read()
 image = base64.b64encode(img)
 payload = {'image':image}
 
-r = requests.post(g_url + ':80/image', files=payload, headers={'token':token})
+r = requests.post(g_url + ':80/image', files=payload, headers={'token':token,'store':str(0)})
 
 if r.ok:
     result = r.json()
