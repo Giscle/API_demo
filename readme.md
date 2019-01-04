@@ -1,16 +1,15 @@
-
 # API Tutorial
+Find demo code in our [Github Repo](https://github.com/Giscle/API_demo)
+
 
 # Prerequisite
-
 1.  Basic knowledge of Python or any programming language and Network Programming.
 2.  OpenCV or any Image manipulation library
 3.  Basic knowledge of Javascript Object Notation (JSON)
 
 # Face Detection API
-
-For authentication, only API key is required in Face Detection API and is provided as a header instead of form data. And the image is sent as base64 encoding of the file. You can find the client side code of Face Detection API written in Python3
-
+For authentication, only API key is required in Face Detection API and is provided as a header instead of form data. And the image is sent as base64 encoding of the file. You can find the client side code of Face Detection API written in Python3.
+Face Detection API offers an option to store the searched face which could be searched using face searching API using the **folderkey 'facedetection'. **You can instruct the API whether to store the image or not using the attribute **store **in the request headers along with attribute **token **which is the API key issued to you.
 
 ```
 import requests
@@ -18,6 +17,7 @@ import cv2
 import base64
 
 token = "YOUR_API_KEY"
+toStore = str(0)
 g_url = 'http://api.giscle.ml'
 
 imageName = "PATH_TO_IMAGE"
@@ -26,7 +26,7 @@ img = img.read()
 image = base64.b64encode(img)
 payload = {'image':image}
 
-r = requests.post(g_url + ':80/image', files=payload, headers={'token':token})
+r = requests.post(g_url + ':80/image', files=payload, headers={'token':token,'store':toStore})
 
 if r.ok:
 	result = r.json()
@@ -41,25 +41,16 @@ else:
 	print(r.status_code)
 ```
 
-
 When you do an HTTP Post request to Giscle server for the Face Detection API, you will find an output like this:
-
 
 ```
 {'Data': ['frame_09a2_233e', 1, {'FACE_1c77_ee11': {'Age': 23, 'Emotion': 'sad', 'Gender': 'M', 'rect_coordinate': [52, 56, 94, 132]}}], 'Status': 'Success'}
 ```
 
-
 The result will be a JSON object with an attribute "Data" that contains a list of all the faces, the element in the 2th position of the list is another JSON object which contains all the information about the face identified by a unique id, you can get the list of all the id using keys() method of JSON object. The "rect_coordinate" attribute give a list of numbers which are lower left coordinates of the face in the image and the next two number are the height and width of the rectangle that bounds the face.
 
-
-# 
-
-
 # Face Comparison API
-
 The payload of the Face Comparison API contains the authorisation attributes and also the two images. The payload of this API looks like this:
-
 
 ```
 payload{
@@ -112,13 +103,8 @@ if r.ok:
 else:
     print(r.status_code)
 ```
-
-
 You can use a socket client to do this task:
-
-
 ### Comparing two photos
-
 
 ```
 from socketIO_client import SocketIO, LoggingNamespace
@@ -163,6 +149,48 @@ if __name__ == "__main__":
 	socketio.on('response', response)
 	socketio.emit('Compare_face_image',  {'img1':img1,'img2':img2,'token':token,'secret':secret,'folder':'default'})
 	socketio.wait(seconds=4)
+```
+
+### Comparing photo and a video
+
+```
+from socketIO_client import SocketIO, LoggingNamespace
+import cv2
+import hashlib
+import base64
+import requests
+g_url = 'http://35.237.223.3'
+socketio = SocketIO(g_url, 5000, LoggingNamespace)
+
+token = "YOUR_API_KEY"
+secret = "YOUR_SECRET_KEY"
+
+socketio.emit('authenticate',{'token':token})
+
+def response(args):
+    print('response', str(args['data']))
+
+def send_Video_face_compare():
+    imgPath1 = '...'
+    vidPath = '...'
+    img1 = open(imgPath1, "rb").read()
+    img1 = base64.b64encode(img1)
+    img1 = img1.decode('utf-8')
+    vidcap = cv2.VideoCapture(vidPath)
+    success, img2 = vidcap.read()
+    success = True
+    while success:
+        result, img2 = cv2.imencode('.jpg', img2)
+        img2 = img2.tostring()
+        img2 = base64.b64encode(img2)
+        img2 = img2.decode('utf-8')
+        socketio.emit('Compare_face_image', {'img1': img1, 'img2': img2, 'token':token,'secret':secret})
+        socketio.wait(seconds=2)
+        print("sending")
+        success, img2 = vidcap.read()
+
+if __name__ == "__main__":
+    send_Video_face_search()
 ```
 
 
@@ -330,23 +358,43 @@ if __name__ == "__main__":
 
 ### Searching a face in a video
 
-(Authentication of the socket is same as that of searching in photo)
-
 
 ```
-vidPath = '...'
-vidcap = cv2.VideoCapture(vidPath)
-success, img1 = vidcap.read()
-success = True
-while success:
-    	result, img1 = cv2.imencode('.jpg', img1)
-    	img1 = base64.b64encode(img1)
-    	img1 = img1.decode('utf-8')
-    	socketio.emit('Search_face', {'img1': img1, 'token':token,'secret':secret,'folder':'default'})
-    	socketio.wait(seconds=4)
-    	print("sending")
-    	success, img1 = vidcap.read()
+from socketIO_client import SocketIO, LoggingNamespace
+import cv2
+import hashlib
+import base64
+import requests
+
+socketio = SocketIO('http://35.237.223.3', 5000, LoggingNamespace)
+
+token = "YOUR_API_KEY"
+secret = "YOUR_SECRET_KEY"
+folder = "..."
+
+def response(args):
+    print('response', str(args['data']))
+
+def send_Video_face_search():
+    vidcap = cv2.VideoCapture('./ddd.mp4')
+    success, img2 = vidcap.read()
+    success = True
+    while success:
+        result, img2 = cv2.imencode('.jpg', img2)
+        img2 = img2.tostring()
+        img2 = base64.b64encode(img2)
+        img2 = img2.decode('utf-8')
+        print("sending")
+        socketio.emit('Search_face',  {'img1':img2,'token':token,'secret':secret,'folder':folder})
+        socketio.wait(seconds=2)
+        success, img2 = vidcap.read()
+
+if __name__ == "__main__":
+    socketio.emit('authenticate',{'token':token})
+    socketio.on('response', response)
+    send_Video_face_search()
 ```
+
 
 When you do a HTTP post request to Face Searching API, which is same as Face Recognition API, you will get a result like this:
 
@@ -355,10 +403,15 @@ When you do a HTTP post request to Face Searching API, which is same as Face Rec
 {'label': 1, 'result': [{'face': [268, 483, 397, 354], 'person': 'Benedict Cumberbatch'}]}
 ```
 
+
 The attribute "label" in the JSON object which you get as a result, signifies whether there is a match or not. If the label is 1, then the attribute "result" will contain a list of JSON objects which has two attributes: "face" this is a list of rectangle coordinates ordered as Top-Right and Bottom- Left corner coordinates of the rectangle that bounds the face and "person" which specifies the corresponding label of that person that you mentioned as the filename while training the dataset.
 
+
 ## Delete Dataset
+
 This API also provides an option to truncate all your photos, you can use that functionality using a client side code similar to this.
+
+
 ```
 import os
 import requests
@@ -378,8 +431,13 @@ else:
 	R.status_code
 ```
 
+
+
 ## Delete Folder
+
 Change the request to this, if you want to delete the folder along with all the images in it.
+
+
 ```
 payload = {
 	'secretKey':secret,
@@ -389,8 +447,13 @@ payload = {
 r = requests.post('http://api.giscle.ml/face_search/delete/dir',data=payload)
 ```
 
+
+
 ## Delete a single image
+
 And finally, if you want to delete a particular image then this.
+
+
 ```
 payload = {
 	'secretKey':secret,
@@ -402,7 +465,12 @@ payload = {
 r = requests.post('http://api.giscle.ml/face_search/delete/image',data=payload)
 ```
 
+
+
 # Errors
+
+
+
 *   Whenever you mention the authentication parameters wrong or invalid, then a status 400 will be initiated from the server.
 *   You will also find 400 status code, when you miss one of the required payload attribute or used wrong payload label other than that used above codes.
 *   An error code of 405 will be initiated if you are doing a GET request instead of POST request
