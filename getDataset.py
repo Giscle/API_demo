@@ -16,9 +16,6 @@ r = requests.post('http://api.giscle.ml/face_search/dataset',data=payload)
 if r.ok:
     result = r.json()
     print(result)
-    # if (result):
-    #     for folder in result.keys():
-    #         for key in result[folder].keys():
-    #             print("id:",key,",folder:",folder,",label:",result[folder][key]['label'])
+
 else:
     r.status_code

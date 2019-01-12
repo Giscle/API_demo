@@ -3,8 +3,8 @@ import cv2
 import hashlib
 import base64
 import requests
-g_url = 'http://35.237.223.3'
-socketio = SocketIO(g_url, 5000, LoggingNamespace)
+g_url = 'http://socket.giscle.com'
+socketio = SocketIO(g_url, 8000, LoggingNamespace)
 
 def response(args):
     print('response', str(args))

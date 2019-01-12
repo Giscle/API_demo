@@ -112,8 +112,8 @@ import cv2
 import hashlib
 import base64
 import requests
-g_url = 'http://35.237.223.3:8080'
-socketio = SocketIO(g_url, 5000, LoggingNamespace)
+g_url = 'http://socket.giscle.com'
+socketio = SocketIO(g_url, 8000, LoggingNamespace)
 
 
 cnt=0
@@ -159,8 +159,8 @@ import cv2
 import hashlib
 import base64
 import requests
-g_url = 'http://35.237.223.3'
-socketio = SocketIO(g_url, 5000, LoggingNamespace)
+g_url = 'http://socket.giscle.com'
+socketio = SocketIO(g_url, 8000, LoggingNamespace)
 
 token = "YOUR_API_KEY"
 secret = "YOUR_SECRET_KEY"
@@ -324,8 +324,8 @@ import cv2
 import hashlib
 import base64
 import requests
-g_url = 'http://35.237.223.3:8080'
-socketio = SocketIO(g_url, 5000, LoggingNamespace)
+g_url = 'http://socket.giscle.com'
+socketio = SocketIO(g_url, 8000, LoggingNamespace)
 
 
 def response(args):
@@ -366,7 +366,8 @@ import hashlib
 import base64
 import requests
 
-socketio = SocketIO('http://35.237.223.3', 5000, LoggingNamespace)
+g_url = 'http://socket.giscle.com'
+socketio = SocketIO(g_url, 8000, LoggingNamespace)
 
 token = "YOUR_API_KEY"
 secret = "YOUR_SECRET_KEY"
@@ -468,9 +469,6 @@ r = requests.post('http://api.giscle.ml/face_search/delete/image',data=payload)
 
 
 # Errors
-
-
-
 *   Whenever you mention the authentication parameters wrong or invalid, then a status 400 will be initiated from the server.
 *   You will also find 400 status code, when you miss one of the required payload attribute or used wrong payload label other than that used above codes.
 *   An error code of 405 will be initiated if you are doing a GET request instead of POST request

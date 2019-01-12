@@ -4,7 +4,7 @@ import hashlib
 import base64
 import requests
 
-socketio = SocketIO('http://35.237.223.3', 5000, LoggingNamespace)
+socketio = SocketIO('http://socket.giscle.com', 8000, LoggingNamespace)
 
 token = "YOUR_API_KEY"
 secret = "YOUR_SECRET_KEY"
