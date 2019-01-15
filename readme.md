@@ -190,7 +190,7 @@ def send_Video_face_compare():
         success, img2 = vidcap.read()
 
 if __name__ == "__main__":
-    send_Video_face_search()
+    send_Video_face_compare()
 ```
 
 
