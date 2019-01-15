@@ -41,7 +41,7 @@ while True:
     encoded_frame = encoded_frame.decode('utf-8')
     socketio.emit('faged', {'data': encoded_frame})
     socketio.on('response', extract_data)
-    socketio.wait(0.0001)
+    socketio.wait(0.1)
     print(time.time() - t)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
