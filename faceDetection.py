@@ -3,7 +3,6 @@ import cv2
 import base64
 
 token = "YOUR_API_KEY"
-secret = "YOUR_SECRET_KEY"
 
 g_url = 'http://api.giscle.ml'
 
