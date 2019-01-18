@@ -4,7 +4,7 @@ import hashlib
 import base64
 import time
 
-token = 'Paste your token'
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFwdXJ2LmNoYXVkaGFyeTA2QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYXB1cnYwNiIsImZpcnN0bmFtZSI6IkFwdXJ2In0.ogOgdOo4NQjQlJbxtvmvwD2f2ns7guDIIoHYlyfxOMo"
 
 g_url = 'http://api.giscle.ml'
 
@@ -39,7 +39,7 @@ while True:
     encoded, buffer = cv2.imencode('.jpg', frame)
     encoded_frame = base64.b64encode(buffer)
     encoded_frame = encoded_frame.decode('utf-8')
-    socketio.emit('faged', {'data': encoded_frame})
+    socketio.emit('faged', {'data': encoded_frame,'store':0})
     socketio.on('response', extract_data)
     socketio.wait(0.1)
     print(time.time() - t)
