@@ -4,7 +4,7 @@ import hashlib
 import base64
 import time
 
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFwdXJ2LmNoYXVkaGFyeTA2QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYXB1cnYwNiIsImZpcnN0bmFtZSI6IkFwdXJ2In0.ogOgdOo4NQjQlJbxtvmvwD2f2ns7guDIIoHYlyfxOMo"
+token = "paste_your_api_key"
 
 g_url = 'http://api.giscle.ml'
 
@@ -31,7 +31,6 @@ frame_count = 1
 
 while True:
     global t
-    t = time.time()
     ret, frame = cam.read()
     if not ret:
         continue
@@ -39,6 +38,7 @@ while True:
     encoded, buffer = cv2.imencode('.jpg', frame)
     encoded_frame = base64.b64encode(buffer)
     encoded_frame = encoded_frame.decode('utf-8')
+    t = time.time()
     socketio.emit('faged', {'data': encoded_frame,'store':0})
     socketio.on('response', extract_data)
     socketio.wait(0.1)
