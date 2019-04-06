@@ -214,6 +214,7 @@ The authentication parameters of the Face Searching API is same as that of Face 
 
 Before you can search any photo using Face Searching API, you have to train our model using your Face Dataset, which is a directory that contains the images of all the faces with the label as the filename. For example, you want to create a software that can classify the faces of all your employees, then you have to prepare a directory of images of clear headshots of all your employes and the filename of each photo will be the employee id of corresponding face. After you prepare that director, you can write a code like this, this will read each image one by one and train our face classifying AI.
 
+**While adding images, please make sure that the image contain only one face and the label must be the folder name or the file name, this will ensure maximum accuracy**
 
 ```
 import os
