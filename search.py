@@ -11,6 +11,8 @@ secret = "YOUR_SECRET_KEY"
 
 folderKey = "default"
 
+distance = 0.5 // Change this value as explained in the Doc.
+
 imageName = "dd.jpg"
 img = open(imageName,'rb')
 
@@ -18,7 +20,8 @@ g_url = 'http://api.giscle.ml'
 auth = {
     'secretKey':secret,
     'apiKey':token,
-    'folderKey':folderKey
+    'folderKey':folderKey,
+    'distance':distance
     }
 
 r = requests.post("{}/{}".format(g_url,'face_search'),data=auth, files={'img1':img})
