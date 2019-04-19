@@ -11,7 +11,7 @@ secret = "YOUR_SECRET_KEY"
 
 folderKey = "default"
 
-distance = 0.5 // Change this value as explained in the Doc.
+distance = 0.5 # Change this value as explained in the Doc.
 
 imageName = "dd.jpg"
 img = open(imageName,'rb')
